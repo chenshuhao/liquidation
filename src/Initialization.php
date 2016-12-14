@@ -104,7 +104,6 @@
 
 			$this->sign($params);
 			$params['sign'] = $this->sign;
-			var_dump($params);
 
 			return http_build_query($params);
 		}
