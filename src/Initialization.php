@@ -18,6 +18,8 @@
 		public $public_key_file;
 		public $public_key;
 
+		public $liquidation_public_key_file;
+
 		public $com = [
 			'subMerchant' => Submerchant\Submerchant::class,
 			'aliPay'      => Alipay\Alipay::class,
@@ -41,6 +43,11 @@
 			$this->private_key_file = $private_key_file;
 			$this->public_key_file = $public_key_file;
 
+			$this->register();
+		}
+
+		public function setSubMerchantId($sub_merchant_id){
+			$this->sub_merchant_id = $sub_merchant_id;
 			$this->register();
 		}
 
