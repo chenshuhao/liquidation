@@ -10,7 +10,7 @@
 		public $sign;
 		public $version = '1.0';
 		public $content;
-		public $environment = 'RUN';
+		public $environment = 'DEV';
 
 		public $private_key_file;
 		public $private_key;
@@ -49,6 +49,7 @@
 		public function setSubMerchantId($sub_merchant_id){
 			$this->sub_merchant_id = $sub_merchant_id;
 			$this->register();
+            return $this;
 		}
 
 		static public function init($app_id, $sub_merchant_id, $private_key_file, $public_key_file)
@@ -111,6 +112,8 @@
 
 			$this->sign($params);
 			$params['sign'] = $this->sign;
+
+            var_dump($params);
 
 			return http_build_query($params);
 		}

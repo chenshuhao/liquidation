@@ -26,7 +26,7 @@
 
 				self::$_self = new Wxpay();
 				self::$_self->parent = $parent;
-				self::$_self->sub_merchant_id = $sub_merchant_id;
+				self::$_self->sub_merchant_id = $parent->sub_merchant_id;
 
 				return self::$_self;
 			};
@@ -34,7 +34,7 @@
 
 		public function mpPay($data)
 		{
-			$this->parnet->setMethod('fshows.liquidation.wxpay.mppay');
+			$this->parent->setMethod('fshows.liquidation.wxpay.mppay');
 			/*
 				body
 				out_trade_no,
@@ -45,7 +45,7 @@
 				sub_appid
 			*/
 			$data['sub_merchant_id'] = $this->sub_merchant_id;
-
+            var_dump($data);
 			return $this->parent->http($data);
 		}
 
