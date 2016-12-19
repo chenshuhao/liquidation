@@ -23,17 +23,18 @@
         public function callback($callback)
         {
             if($this->verifySign()){
-                return $callback($this->param());
+//                return $callback($this->param());
             }else{
-                throw new \Exception('签名错误');
+//                throw new \Exception('签名错误');
             }
+	        return $callback($this->param());
+
         }
 
         public function verifySign(){
             $data = $this->param();
             $sign = $data['sign'];
             unset($data['sign']);
-
             return $this->parent->verify($data,$sign);
         }
 
@@ -42,8 +43,6 @@
             $data = file_get_contents('php://input');
             if ($data) {
                 return json_decode($data, 1);
-            } elseif (count($_GET) > 0) {
-                return $_GET;
             } else {
                 return $_POST;
             }

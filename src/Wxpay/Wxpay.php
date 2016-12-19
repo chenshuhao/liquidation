@@ -22,7 +22,7 @@
 		{
 			return function () use ($parent) {
 
-				if(self::$_self) return self::$_self;
+				if (self::$_self) return self::$_self;
 
 				self::$_self = new Wxpay();
 				self::$_self->parent = $parent;
@@ -45,7 +45,8 @@
 				sub_appid
 			*/
 			$data['sub_merchant_id'] = $this->sub_merchant_id;
-            var_dump($data);
+			var_dump($data);
+
 			return $this->parent->http($data);
 		}
 
@@ -59,13 +60,15 @@
 
 			$data['store_id'] = $this->sub_merchant_id;
 			$response = $this->parent->http($data);
-			if($response['success'] == true){
+			if ($response['success'] == TRUE) {
 				$this->prepay_id = $response['return_value']['prepay_id'];
 			}
+
 			return $response;
 		}
 
-		public function tradePreCreate($data){
+		public function tradePreCreate($data)
+		{
 			$this->parent->setMethod('fshows.liquidation.wx.trade.precreate');
 
 			$data['store_id'] = $this->sub_merchant_id;
@@ -73,15 +76,18 @@
 			return $this->parent->http($data);
 		}
 
-		public function appPay($data){
+		public function appPay($data)
+		{
 			$this->parent->setMethod('fshows.liquidation.wxpay.apppay');
 
 			$data['sub_merchant_id'] = $this->sub_merchant_id;
+
 			return $this->parent->http($data);
 		}
 
-		public function h5Pay($prepay_id,$redirct_url){
-			return'https://openapi-liquidation.51fubei.com/payPage/?prepay_id='.($prepay_id?:$this->prepay_id).'&callback_url='.urlencode($redirct_url);
+		public function h5Pay($prepay_id, $redirct_url)
+		{
+			return $this->parent->base_url . '/payPage/?prepay_id=' . ($prepay_id ?: $this->prepay_id) . '&callback_url=' . urlencode($redirct_url);
 		}
 
 

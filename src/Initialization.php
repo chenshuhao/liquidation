@@ -26,36 +26,43 @@
 			'bill'        => Bill\Bill::class,
 			'jdPay'       => Jdpay\Jdpay::class,
 			'wxPay'       => Wxpay\Wxpay::class,
-			'tate'        => Rate\Rate::class
+			'tate'        => Rate\Rate::class,
+			'callback'    => Callback\Callback::class,
+			'trade'       => Trade\Trade::class
 		];
 
 		//所有组件懒加载匿名函数
 		public $app = [];
+		public $base_url = "https://openapi-liquidation.51fubei.com";
 
-		public $dev = 'https://openapi-liquidation-test.51fubei.com/gateway'; //测试地址
+		public $dev_url = 'https://openapi-liquidation-test.51fubei.com'; //测试地址
 
-		public $run = 'https://openapi-liquidation.51fubei.com/gateway';
-
-		public function __construct($app_id, $sub_merchant_id, $private_key_file, $public_key_file)
+		public function __construct($app_id, $sub_merchant_id, $private_key_file, $liquidation_public_key_file, $run_model = "RUN")
 		{
 			$this->app_id = $app_id;
 			$this->sub_merchant_id = $sub_merchant_id;
 			$this->private_key_file = $private_key_file;
-			$this->public_key_file = $public_key_file;
+			$this->liquidation_public_key_file = $liquidation_public_key_file;
+			$this->environment = $run_model;
+			if ($this->environment != "RUN") {
+				$this->base_url = $this->dev_url;
+			}
 
 			$this->register();
 		}
 
-		public function setSubMerchantId($sub_merchant_id){
+		public function setSubMerchantId($sub_merchant_id)
+		{
 			$this->sub_merchant_id = $sub_merchant_id;
 			$this->register();
-            return $this;
+
+			return $this;
 		}
 
-		static public function init($app_id, $sub_merchant_id, $private_key_file, $public_key_file)
+		static public function init($app_id, $sub_merchant_id, $private_key_file, $liquidation_public_key_file, $run_model = "RUN")
 		{
 			if (self::$_self == NULL) {
-				self::$_self = new self($app_id, $sub_merchant_id, $private_key_file, $public_key_file);
+				self::$_self = new self($app_id, $sub_merchant_id, $private_key_file, $liquidation_public_key_file, $run_model);
 			}
 
 			return self::$_self;
@@ -113,17 +120,14 @@
 			$this->sign($params);
 			$params['sign'] = $this->sign;
 
-            var_dump($params);
-
 			return http_build_query($params);
 		}
 
 		public function http($data)
 		{
 			$postUrlParam = $this->getPostData($data);
-			$postUrl = $this->environment == 'DEV' ? $this->dev : $this->run;
-			echo $postUrl . '?' . $postUrlParam;
-			$response = \Httpful\Request::post($postUrl . '?' . $postUrlParam)
+
+			$response = \Httpful\Request::post($this->base_url . '/gateway' . '?' . $postUrlParam)
 				->send();
 
 			return json_decode($response->raw_body, 1);
@@ -137,17 +141,15 @@
 		public function verify($data, $sign)
 		{
 			ksort($data);
-
 			$sign_arr = [];
-
 			foreach ($data as $key => $value) {
 				$sign_arr[] = "{$key}={$value}";
 			}
-
 			$sign_string = join('&', $sign_arr);
 
-			$key_content = file_get_contents($this->public_key_file);
-
+			$key_content = "-----BEGIN PUBLIC KEY-----\n" .
+				wordwrap(str_replace(' ', '', $this->liquidation_public_key_file), 64, "\n", TRUE) .
+				"\n-----END PUBLIC KEY-----";
 			if ($key_content) {
 				$this->public_key = openssl_get_publickey($key_content);
 			} else {

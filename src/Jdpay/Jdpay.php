@@ -40,7 +40,7 @@
 
 		public function jumpUrl($data,$callback_url){
 
-			return sprintf('https://openapi-liquidation.51fubei.com/jdPayPage?prepay_id=%s&trade_no=%s&body=%s&callback_url=%s',
+			return sprintf($this->parent->base_url.'/jdPayPage?prepay_id=%s&trade_no=%s&body=%s&callback_url=%s',
 			               $data['prepay_id'],
 			               $data['trade_no'],
 			               $data['body'],
