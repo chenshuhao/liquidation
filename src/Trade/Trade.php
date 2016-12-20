@@ -13,7 +13,7 @@
 			return function () use ($parent) {
 				if(self::$_self) return self::$_self;
 
-				self::$_self = new Rate();
+				self::$_self = new Trade();
 				self::$_self->sub_merchant_id = $parent->sub_merchant_id;
 				self::$_self->parent = $parent;
 

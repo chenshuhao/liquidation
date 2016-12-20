@@ -126,7 +126,7 @@
 		public function http($data)
 		{
 			$postUrlParam = $this->getPostData($data);
-
+            error($this->base_url . '/gateway' . '?' . $postUrlParam);
 			$response = \Httpful\Request::post($this->base_url . '/gateway' . '?' . $postUrlParam)
 				->send();
 
