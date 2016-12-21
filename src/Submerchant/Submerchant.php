@@ -17,7 +17,7 @@
 
 				if(self::$_self) return self::$_self;
 
-				self::$_self = new submerchant();
+				self::$_self = new Submerchant();
 				self::$_self->app_id = $parent->app_id;
 				self::$_self->sub_merchant_id = $parent->sub_merchant_id;
 				self::$_self->parent = $parent;
@@ -58,8 +58,8 @@
 			$this->parent->setMethod('fshows.liquidation.submerchant.query');
 
 			$data = [
-				'sub_merchant_id' => $this->sub_merchant_id,
-				'external_id'     => $external_id
+				'sub_merchant_id' => $external_id,
+//				'external_id'     => $external_id
 			];
 
 			return $this->parent->http($data);

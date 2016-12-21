@@ -119,7 +119,6 @@
 
 			$this->sign($params);
 			$params['sign'] = $this->sign;
-
 			return http_build_query($params);
 		}
 
@@ -127,9 +126,9 @@
 		{
 			$postUrlParam = $this->getPostData($data);
             error($this->base_url . '/gateway' . '?' . $postUrlParam);
-			$response = \Httpful\Request::post($this->base_url . '/gateway' . '?' . $postUrlParam)
+			$response = \Httpful\Request::post($this->base_url . '/gateway' . '?'  )
+                ->body($postUrlParam,'form')
 				->send();
-
 			return json_decode($response->raw_body, 1);
 		}
 
