@@ -23,11 +23,11 @@
         public function callback($callback)
         {
             if($this->verifySign()){
-//                return $callback($this->param());
+                debug(json_encode($this->param()));
+                return $callback($this->param());
             }else{
-//                throw new \Exception('签名错误');
+                throw new \Exception('签名错误');
             }
-	        return $callback($this->param());
 
         }
 
@@ -40,7 +40,7 @@
 
         public function param()
         {
-            $data = file_get_contents('php://input');
+            $data = $_POST?:file_get_contents('php://input');
             if ($data) {
                 return json_decode($data, 1);
             } else {
